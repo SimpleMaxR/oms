@@ -22,7 +22,7 @@ func NewHttpServer(addr string) *httpServer {
 func (s *httpServer) Run() error {
 	router := http.NewServeMux()
 
-	conn := NewGRPCClient(s.addr)
+	conn := NewGRPCClient(":9000")
 	defer conn.Close()
 
 	router.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
@@ -75,8 +75,8 @@ var ordersTemplate = `
         </tr>
         {{range .}}
         <tr>
-            <td>{{.OrderID}}</td>
-            <td>{{.CustomerID}}</td>
+            <td>{{.OrderId}}</td>
+            <td>{{.CustomerId}}</td>
             <td>{{.Quantity}}</td>
         </tr>
         {{end}}
