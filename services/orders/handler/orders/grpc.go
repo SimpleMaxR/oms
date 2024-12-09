@@ -8,32 +8,29 @@ import (
 	"google.golang.org/grpc"
 )
 
+// OrdersGrpcHandler 处理 gRPC 订单服务请求
 type OrdersGrpcHandler struct {
-	// service 注入
-	orderService types.OrderService
+	orderService types.OrderService // 注入订单服务的实现
 	orders.UnimplementedOrderServiceServer
 }
 
+// NewGrpcOrdersService 创建并注册 gRPC 订单服务
 func NewGrpcOrdersService(grpc *grpc.Server, orderService types.OrderService) {
 	gRPCHandler := &OrdersGrpcHandler{
 		orderService: orderService,
 	}
-
-	// 注册 OrderServiceServer
-	orders.RegisterOrderServiceServer(grpc, gRPCHandler)
+	orders.RegisterOrderServiceServer(grpc, gRPCHandler) // 使用 grpc Server 实例和 OrdersGrpcHandler 实例注册服务
 }
 
+// CreateOrder 处理创建订单的 gRPC 请求
 func (h *OrdersGrpcHandler) CreateOrder(ctx context.Context, req *orders.CreateOrderRequest) (*orders.CreateOrderResponse, error) {
-	// handle 接口层逻辑
-
 	order := &orders.Order{
-		OrderId:    "001",
+		OrderId:    "001", // 注意：这里应该使用动态生成的订单ID
 		CustomerId: req.CustomerId,
 		ProductId:  req.ProductId,
 		Quantity:   req.Quantity,
 	}
 
-	// 调用 service
 	err := h.orderService.CreateOrder(ctx, order)
 	if err != nil {
 		return nil, err
@@ -44,6 +41,7 @@ func (h *OrdersGrpcHandler) CreateOrder(ctx context.Context, req *orders.CreateO
 	}, nil
 }
 
+// GetOrder 处理获取订单的 gRPC 请求
 func (h *OrdersGrpcHandler) GetOrder(ctx context.Context, req *orders.GetOrderRequest) (*orders.GetOrderResponse, error) {
 	// handle 接口层逻辑
 

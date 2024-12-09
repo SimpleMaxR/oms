@@ -24,7 +24,7 @@ func (h *OrderHttpHandler) RegisterRouter(router *http.ServeMux) {
 }
 
 func (h *OrderHttpHandler) CreateOrder(w http.ResponseWriter, r *http.Request) {
-	var req orders.CreateOrderRequest
+	var req *orders.CreateOrderRequest = &orders.CreateOrderRequest{}
 	err := util.ParseJSON(r, req)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
